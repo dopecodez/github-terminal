@@ -1,0 +1,27 @@
+{
+  "name": "github-terminal",
+  "version": "1.0.0",
+  "description": "Project for getting github projects in command",
+  "main": "src/index.js",
+  "bin": {
+    "@your_npm_username/github-terminal": "bin/main.js",
+    "github-terminal": "bin/main.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "github-terminal"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async-request": "^1.2.0",
+    "esm": "^3.2.25",
+    "inquirer": "^7.0.0"
+  }
+}
