@@ -5,9 +5,7 @@ class RequestService {
     async getGitHubSearchResult(keyword) {
         let url = constants.GITHUB_BASE_URL + 'search/repositories?q=' + keyword;
         try {
-            let data = await request(url, {
-                headers: constants.GITHUB_HEADERS
-            });
+            let data = await this.fireRequest(url);
             return data;
         } catch (err) {
             throw err;
@@ -16,6 +14,25 @@ class RequestService {
 
     async getGitHubRepoDetails(repoUrl) {
         let url = constants.GITHUB_BASE_URL + 'repos/' + repoUrl;
+        try {
+            let data = await this.fireRequest(url);
+            return data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getGitHubUserRepos(username) {
+        let url = constants.GITHUB_BASE_URL + 'users/' + username + '/repos';
+        try {
+            let data = await this.fireRequest(url);
+            return data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async fireRequest(url){
         try {
             let data = await request(url, {
                 headers: constants.GITHUB_HEADERS

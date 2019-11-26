@@ -3,9 +3,17 @@ const inquirer = require('inquirer'),
     constants = require('../commons/constants.js');
 
 async function cli(args) {
-    let keyword = await getKeyWord();
-    let repos = await request.getGitHubSearchResult(keyword);
-    let items = JSON.parse(repos.body).items;
+    let action = await getAction();
+    let keyword, repos, items;
+    if(action == constants.MESSAGES.ACTIONS[0]){
+        keyword = await getKeyWord(constants.MESSAGES.SELECTION.GITHUB_SEARCH);
+        repos = await request.getGitHubSearchResult(keyword);
+        items = JSON.parse(repos.body).items;
+    }else if(action == constants.MESSAGES.ACTIONS[1]){
+        keyword = await getKeyWord(constants.MESSAGES.SELECTION.USERNAME_FETCH);
+        repos = await request.getGitHubUserRepos(keyword);
+        items = JSON.parse(repos.body);
+    }
     items.length = 5;
     let choices = [];
     items.forEach( repo => {
@@ -31,14 +39,28 @@ async function chooseBetweenOptions(choices) {
     return answers.action;
 }
 
-async function getKeyWord(){
+async function getKeyWord(message){
     let keywordQuestion = [];
     keywordQuestion.push({
         name: 'keyword',
-        message: constants.MESSAGES.SELECTION.GITHUB_SEARCH
+        message: message
     });
     const answer = await inquirer.prompt(keywordQuestion);
     return answer.keyword;
+}
+
+async function getAction(){
+    let actionQuestion = [];
+    let defaultAction = constants.MESSAGES.ACTIONS[0];
+    actionQuestion.push({
+        type: 'list',
+        name: 'action',
+        message: constants.MESSAGES.SELECTION.ACTION_CHOICE,
+        choices: constants.MESSAGES.ACTIONS,
+        default: defaultAction,
+    });
+    const answer = await inquirer.prompt(actionQuestion);
+    return answer.action;
 }
 
 function parseRepoDetails(repo){

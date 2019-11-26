@@ -7,8 +7,11 @@ module.exports = {
     MESSAGES: {
         SELECTION: {
             REPO_SELECTION: 'Please choose between top 5 repos which match your search',
-            GITHUB_SEARCH: 'Enter Github repo name for search'
-        }
+            GITHUB_SEARCH: 'Enter Github repo name for search',
+            ACTION_CHOICE : 'Please choose which action you want',
+            USERNAME_FETCH : 'Please enter github username'
+        },
+        ACTIONS : ['Search Repo', 'List Repo for user']
     },
     FIELDS: [
         'id',
