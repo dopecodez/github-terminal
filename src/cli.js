@@ -1,72 +1,146 @@
 const inquirer = require('inquirer'),
     request = require('../src/request.js'),
+    arg = require('arg'),
     constants = require('../commons/constants.js');
 
+// main function
 async function cli(args) {
-    let action = await getAction();
-    let keyword, repos, items;
-    if(action == constants.MESSAGES.ACTIONS[0]){
-        keyword = await getKeyWord(constants.MESSAGES.SELECTION.GITHUB_SEARCH);
-        repos = await request.getGitHubSearchResult(keyword);
-        items = JSON.parse(repos.body).items;
-    }else if(action == constants.MESSAGES.ACTIONS[1]){
-        keyword = await getKeyWord(constants.MESSAGES.SELECTION.USERNAME_FETCH);
-        repos = await request.getGitHubUserRepos(keyword);
-        items = JSON.parse(repos.body);
+    try {
+        let options = parseArgumentsIntoOptions(args); // parse cli arguments
+        let action;
+        if(options.search && options.user){ //cannot use both search and list user repos together
+            throw new Error(constants.MESSAGES.ERRORS.USER_SEARCH_ERROR); 
+        }
+        if (options.search) {
+            action = constants.MESSAGES.ACTIONS[0];
+        } else if (options.user) {
+            action = constants.MESSAGES.ACTIONS[1];
+        } else {
+            action = await getAction(); // if no options, provide prompt for user input on type of action
+        }
+        let keyword, repos, items;
+        if (action == constants.MESSAGES.ACTIONS[0]) {
+            if (options.keyword == null) {
+                keyword = await getKeyWord(constants.MESSAGES.SELECTION.GITHUB_SEARCH);
+            } else {
+                keyword = options.keyword; //if no options, provide prompt for user to input keyword
+            }
+            repos = await request.getGitHubSearchResult(keyword);
+            items = JSON.parse(repos.body).items;
+            if(items.length == 0){
+                throw new Error(constants.MESSAGES.ERRORS.NO_SEARCH_RESULT)
+            }
+        } else if (action == constants.MESSAGES.ACTIONS[1]) {
+            if (options.keyword == null) {
+                keyword = await getKeyWord(constants.MESSAGES.SELECTION.USERNAME_FETCH);
+            } else {
+                keyword = options.keyword;//if no options, provide prompt for user to input keyword
+            }
+            repos = await request.getGitHubUserRepos(keyword);
+            items = JSON.parse(repos.body);
+            if(items.message == constants.MESSAGES.ERRORS.NOT_FOUND){
+                throw new Error(constants.MESSAGES.ERRORS.NOT_VALID_USERNAME)
+            }
+            items.sort((a, b) => b.stargazers_count - a.stargazers_count); //sorting by no of stars
+        }
+        items.length = 5; //setting no of choices length to 5
+        let choices = [];
+        items.forEach(repo => {
+            choices.push(repo.full_name); //providing user selection from full names of repos
+        });
+        let selectedRepo = await chooseBetweenOptions(choices);//prompt for user to select repo
+        let repoDetails = await request.getGitHubRepoDetails(selectedRepo);
+        let parsedRepo = parseRepoDetails(JSON.parse(repoDetails.body));//parsing to get only required fields
+        console.log(parsedRepo);
+    } catch (err) {
+        console.log(err.message);
     }
-    items.length = 5;
-    let choices = [];
-    items.forEach( repo => {
-        choices.push(repo.full_name);
-    });
-    let selectedRepo = await chooseBetweenOptions(choices);
-    let repoDetails = await request.getGitHubRepoDetails(selectedRepo);
-    let parsedRepo = parseRepoDetails(JSON.parse(repoDetails.body));
-    console.log(parsedRepo);
 }
 
+//parses raw arguments to options
+function parseArgumentsIntoOptions(rawArgs) {
+    try {
+        const args = arg(
+            {
+                '--search': Boolean,
+                '--keyword': String,
+                '--user': Boolean,
+                '-s': '--search',
+                '-k': '--keyword',
+                '-u': '--user',
+            },
+            {
+                argv: rawArgs.slice(2),
+            }
+        );
+        return {
+            search: args['--search'] || null,
+            user: args['--user'] || null,
+            keyword: args['--keyword'] || null
+        }
+    } catch (err) {
+        throw (err);
+    }
+}
+
+//function to choose between repos
 async function chooseBetweenOptions(choices) {
-    const defaultAction = choices[0];
-    const actionQuestion = [];
-    actionQuestion.push({
-        type: 'list',
-        name: 'action',
-        message: constants.MESSAGES.SELECTION.REPO_SELECTION,
-        choices: choices,
-        default: defaultAction,
-    });
-    const answers = await inquirer.prompt(actionQuestion);
-    return answers.action;
+    try {
+        const defaultAction = choices[0];
+        const actionQuestion = [];
+        actionQuestion.push({
+            type: 'list',
+            name: 'action',
+            message: constants.MESSAGES.SELECTION.REPO_SELECTION,
+            choices: choices,
+            default: defaultAction,
+        });
+        const answers = await inquirer.prompt(actionQuestion);
+        return answers.action;
+    } catch (err) {
+        throw err;
+    }
 }
 
-async function getKeyWord(message){
-    let keywordQuestion = [];
-    keywordQuestion.push({
-        name: 'keyword',
-        message: message
-    });
-    const answer = await inquirer.prompt(keywordQuestion);
-    return answer.keyword;
+//function to get keyword
+async function getKeyWord(message) {
+    try {
+        let keywordQuestion = [];
+        keywordQuestion.push({
+            name: 'keyword',
+            message: message
+        });
+        const answer = await inquirer.prompt(keywordQuestion);
+        return answer.keyword;
+    } catch (err) {
+        throw err;
+    }
 }
 
-async function getAction(){
-    let actionQuestion = [];
-    let defaultAction = constants.MESSAGES.ACTIONS[0];
-    actionQuestion.push({
-        type: 'list',
-        name: 'action',
-        message: constants.MESSAGES.SELECTION.ACTION_CHOICE,
-        choices: constants.MESSAGES.ACTIONS,
-        default: defaultAction,
-    });
-    const answer = await inquirer.prompt(actionQuestion);
-    return answer.action;
+//function to choose between actions
+async function getAction() {
+    try {
+        let actionQuestion = [];
+        let defaultAction = constants.MESSAGES.ACTIONS[0];
+        actionQuestion.push({
+            type: 'list',
+            name: 'action',
+            message: constants.MESSAGES.SELECTION.ACTION_CHOICE,
+            choices: constants.MESSAGES.ACTIONS,
+            default: defaultAction,
+        });
+        const answer = await inquirer.prompt(actionQuestion);
+        return answer.action;
+    } catch (err) {
+        throw err;
+    }
 }
 
-function parseRepoDetails(repo){
+//parse repo details to only get required keys
+function parseRepoDetails(repo) {
     let result = {};
     constants.FIELDS.forEach(field => {
-        if(repo[field]){
+        if (repo[field]) {
             result[field] = repo[field];
         }
     });
@@ -74,5 +148,5 @@ function parseRepoDetails(repo){
 }
 
 module.exports = {
-    cli : cli
+    cli: cli
 }

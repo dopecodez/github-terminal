@@ -11,7 +11,13 @@ module.exports = {
             ACTION_CHOICE : 'Please choose which action you want',
             USERNAME_FETCH : 'Please enter github username'
         },
-        ACTIONS : ['Search Repo', 'List Repo for user']
+        ACTIONS : ['Search Repo', 'List Repo for user'],
+        ERRORS: {
+            USER_SEARCH_ERROR : 'User and Search cannot be used together',
+            NO_SEARCH_RESULT : 'No Search result available',
+            NOT_VALID_USERNAME : 'No user with given name exists',
+            NOT_FOUND : 'Not Found'
+        }
     },
     FIELDS: [
         'id',

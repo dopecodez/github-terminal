@@ -23,7 +23,7 @@ class RequestService {
     }
 
     async getGitHubUserRepos(username) {
-        let url = constants.GITHUB_BASE_URL + 'users/' + username + '/repos';
+        let url = constants.GITHUB_BASE_URL + 'users/' + username + '/repos?per_page=100&sort=updated';
         try {
             let data = await this.fireRequest(url);
             return data;
