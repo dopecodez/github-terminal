@@ -56,7 +56,7 @@ async function cli(args) {
             console.log(`${chalk.green(key)} : ${chalk.cyanBright(JSON.stringify(parsedRepo[key], null, 2))}`)
         });
     } catch (err) {
-        console.log(err.message);
+        console.log(chalk.redBright(err.message));
     }
 }
 
