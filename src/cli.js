@@ -1,6 +1,7 @@
 const inquirer = require('inquirer'),
     request = require('../src/request.js'),
     arg = require('arg'),
+    chalk = require('chalk'),
     constants = require('../commons/constants.js');
 
 // main function
@@ -43,7 +44,7 @@ async function cli(args) {
             }
             items.sort((a, b) => b.stargazers_count - a.stargazers_count); //sorting by no of stars
         }
-        items.length = 5; //setting no of choices length to 5
+        items.length = options.number; //setting no of choices length to input
         let choices = [];
         items.forEach(repo => {
             choices.push(repo.full_name); //providing user selection from full names of repos
@@ -51,7 +52,9 @@ async function cli(args) {
         let selectedRepo = await chooseBetweenOptions(choices);//prompt for user to select repo
         let repoDetails = await request.getGitHubRepoDetails(selectedRepo);
         let parsedRepo = parseRepoDetails(JSON.parse(repoDetails.body));//parsing to get only required fields
-        console.log(parsedRepo);
+        Object.keys(parsedRepo).forEach(key => {
+            console.log(`${chalk.green(key)} : ${chalk.cyanBright(JSON.stringify(parsedRepo[key], null, 2))}`)
+        });
     } catch (err) {
         console.log(err.message);
     }
@@ -65,9 +68,11 @@ function parseArgumentsIntoOptions(rawArgs) {
                 '--search': Boolean,
                 '--keyword': String,
                 '--user': Boolean,
+                '--number' : Number,
                 '-s': '--search',
                 '-k': '--keyword',
                 '-u': '--user',
+                '-n': '--number'
             },
             {
                 argv: rawArgs.slice(2),
@@ -76,7 +81,8 @@ function parseArgumentsIntoOptions(rawArgs) {
         return {
             search: args['--search'] || null,
             user: args['--user'] || null,
-            keyword: args['--keyword'] || null
+            keyword: args['--keyword'] || null,
+            number : args['--number'] || constants.NO_OF_RESULTS
         }
     } catch (err) {
         throw (err);

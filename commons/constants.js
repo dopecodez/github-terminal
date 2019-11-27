@@ -4,6 +4,7 @@ module.exports = {
         Accept: 'application/vnd.github.v3+json',
         'User-Agent': 'dopecodez'
     },
+    NO_OF_RESULTS : 5,
     MESSAGES: {
         SELECTION: {
             REPO_SELECTION: 'Please choose between top 5 repos which match your search',
