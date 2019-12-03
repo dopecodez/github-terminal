@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "mocha ./tests/unitTest"
+    "test": "mocha ./tests/tests --timeout 10000"
   },
   "keywords": [
     "cli",
@@ -22,8 +22,10 @@
   "dependencies": {
     "arg": "^4.1.2",
     "async-request": "^1.2.0",
+    "bdd-stdin": "^0.2.0",
     "chai": "^4.2.0",
     "chalk": "^3.0.0",
+    "concat-stream": "^2.0.0",
     "esm": "^3.2.25",
     "inquirer": "^7.0.0",
     "mocha": "^6.2.2"

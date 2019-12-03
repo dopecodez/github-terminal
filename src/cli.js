@@ -49,7 +49,12 @@ async function cli(args) {
         items.forEach(repo => {
             choices.push(repo.full_name); //providing user selection from full names of repos
         });
-        let selectedRepo = await chooseBetweenOptions(choices);//prompt for user to select repo
+        let selectedRepo;
+        if(!options.first){ 
+            selectedRepo = await chooseBetweenOptions(choices);//prompt for user to select repo
+        }else{
+            selectedRepo = choices[0]; //choose first option by default
+        }
         let repoDetails = await request.getGitHubRepoDetails(selectedRepo);
         let parsedRepo = parseRepoDetails(JSON.parse(repoDetails.body));//parsing to get only required fields
         Object.keys(parsedRepo).forEach(key => {
@@ -69,10 +74,12 @@ function parseArgumentsIntoOptions(rawArgs) {
                 '--keyword': String,
                 '--user': Boolean,
                 '--number' : Number,
+                '--first' : Boolean,
                 '-s': '--search',
                 '-k': '--keyword',
                 '-u': '--user',
-                '-n': '--number'
+                '-n': '--number',
+                '-f' : '--first'
             },
             {
                 argv: rawArgs.slice(2),
@@ -82,7 +89,8 @@ function parseArgumentsIntoOptions(rawArgs) {
             search: args['--search'] || null,
             user: args['--user'] || null,
             keyword: args['--keyword'] || null,
-            number : args['--number'] || constants.NO_OF_RESULTS
+            number : args['--number'] || constants.NO_OF_RESULTS,
+            first : args['--first'] || null
         }
     } catch (err) {
         throw (err);
@@ -154,5 +162,9 @@ function parseRepoDetails(repo) {
 }
 
 module.exports = {
-    cli: cli
+    cli: cli,
+    getAction: getAction,
+    getKeyWord: getKeyWord,
+    chooseBetweenOptions: chooseBetweenOptions,
+    parseArgumentsIntoOptions : parseArgumentsIntoOptions
 }
