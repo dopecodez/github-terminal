@@ -1,4 +1,7 @@
 --- 
+branches: 
+  only: 
+    - master
 language: node_js
 node_js: "11.13.0"
 os: windows
