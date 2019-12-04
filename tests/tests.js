@@ -11,25 +11,19 @@ describe('ght e2e tests', () => {
             'bin/main.js',
             ['-u', '-k', 'dopecodez', '-f']
         );
-        expect(response.trim().split(EOL)).to.have.any.keys(
-            'id',
-            'node_id',
-            'html_url',
-            'url'
-        );
+        response = response.trim().split(EOL);
+        response = response[0];
+        expect(response).to.match(/(?=.*id)(?=.*node_id).*/);
     });
+
     it('repo search e2e test', async function () {
         let response = await cli.execute(
             'bin/main.js',
             ['-s', '-k', 'python-pygame-snake', '-f']
         );
-        console.log(response.trim().split(EOL));
-        expect(response.trim().split(EOL)).to.have.any.keys(
-            'id',
-            'node_id',
-            'html_url',
-            'url'
-        );
+        response = response.trim().split(EOL);
+        response = response[0];
+        expect(response).to.match(/(?=.*id)(?=.*node_id).*/);
     });
 
     it('repo search failure', async function () {
