@@ -1,4 +1,4 @@
-# github-terminal-cli https://travis-ci.org/dopecodez/github-terminal.svg?branch=master
+# github-terminal-cli [https://travis-ci.org/dopecodez/github-terminal.svg?branch=master]
 A terminal cli app for searching and getting user repositories or search details from Github.It uses the Github V3 api's for getting results.For more information on the Github API, go to https://developer.github.com/v3/.
 
 It's a basic cli with inputs that can be passed as arguments or as options. It will get all fields available in repository details which are defined in constants.js file and prints it out in the console. If you need a new field, just add it to the fields array in this file. Has tests with mocha and chai written on top of this.
