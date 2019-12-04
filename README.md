@@ -74,7 +74,7 @@ If any of the above arguments are missing, ght will prompt you select one of the
 Anybody with ideas to genuinely improve the project are welcome. We use git flow, so just pull the repo, cut a branch on develop and put a pull request back to us. We will look through the PR as soon as possible.
 
 ## Versioning
-For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+For the versions available, see the [tags on this repository](https://github.com/dopecodez/github-terminal/tags). 
 
 ## Authors
 
