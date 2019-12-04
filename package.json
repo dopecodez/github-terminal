@@ -1,5 +1,5 @@
 {
-  "name": "github-terminal",
+  "name": "@dopecodez/github-terminal",
   "version": "1.0.0",
   "description": "Project for getting github projects in command",
   "main": "src/index.js",
@@ -8,10 +8,15 @@
     "ght": "bin/main.js"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry":"https://npm.pkg.github.com/dopecodez"
   },
   "scripts": {
     "test": "mocha ./tests/tests --timeout 10000"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "git://github.com/dopecodez/github-terminal.git"
   },
   "keywords": [
     "cli",
