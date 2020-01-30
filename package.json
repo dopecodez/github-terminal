@@ -9,14 +9,14 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry":"https://npm.pkg.github.com/dopecodez"
+    "registry": "https://npm.pkg.github.com/dopecodez"
   },
   "scripts": {
     "test": "mocha ./tests/tests --timeout 10000"
   },
   "repository": {
-    "type" : "git",
-    "url" : "git://github.com/dopecodez/github-terminal.git"
+    "type": "git",
+    "url": "git://github.com/dopecodez/github-terminal.git"
   },
   "keywords": [
     "cli",

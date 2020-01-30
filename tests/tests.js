@@ -13,7 +13,7 @@ describe('ght e2e tests', () => {
         );
         response = response.trim().split(EOL);
         response = response[0];
-        expect(response).to.match(/(?=.*id)(?=.*node_id).*/);
+        expect(response).to.match(/(?=.*id).*/);
     });
 
     it('repo search e2e test', async function () {
@@ -23,7 +23,7 @@ describe('ght e2e tests', () => {
         );
         response = response.trim().split(EOL);
         response = response[0];
-        expect(response).to.match(/(?=.*id)(?=.*node_id).*/);
+        expect(response).to.match(/(?=.*id).*/);
     });
 
     it('repo search failure', async function () {
