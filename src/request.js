@@ -1,4 +1,4 @@
-const request = require('async-request'),
+const got = require('got'),
     constants = require('../commons/constants.js');
 
 class RequestService {
@@ -34,7 +34,7 @@ class RequestService {
 
     async fireRequest(url){
         try {
-            let data = await request(url, {
+            let data = await got(url, {
                 headers: constants.GITHUB_HEADERS
             });
             return data;
