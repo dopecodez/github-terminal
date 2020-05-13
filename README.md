@@ -66,7 +66,7 @@ If any of the above arguments are missing, ght will prompt you select one of the
 * [Inquirer](https://www.npmjs.com/package/inquirer/v/0.2.3) - Package for interactive cli option choice.
 * [args](https://www.npmjs.com/package/args) - Package for parsing command line arguments.
 * [Chalk](https://www.npmjs.com/package/chalk) - Package for creating colorful console outputs.
-* [async-request](https://www.npmjs.com/package/async-request) - async-request is a wrapper for request that uses ES7 async functions.
+* [got](https://www.npmjs.com/package/got) - Human-friendly and powerful HTTP request library for Node.js.
 * [bdd-stdin](https://www.npmjs.com/package/bdd-stdin) - Used for easily mocking responses for BDD unit tests that ask user a question.
 
 ## Contributing
