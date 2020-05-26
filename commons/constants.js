@@ -38,7 +38,6 @@ module.exports = {
         'is_template',
         'topics',
         "has_issues",
-        "has_projects",
         "has_wiki",
         "has_pages",
         "has_downloads",
