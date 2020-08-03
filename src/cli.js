@@ -57,9 +57,12 @@ async function cli(args) {
         }
         let repoDetails = await request.getGitHubRepoDetails(selectedRepo);
         let parsedRepo = parseRepoDetails(JSON.parse(repoDetails.body));//parsing to get only required fields
+        console.log(chalk.yellowBright(`-----------------------------------------------------------------`))
+        console.log(chalk.bgBlack.bold.whiteBright(selectedRepo));
         Object.keys(parsedRepo).forEach(key => {
             console.log(`${chalk.green(key)} : ${chalk.cyanBright(JSON.stringify(parsedRepo[key], null, 2))}`)
         });
+        console.log(chalk.yellowBright(`-----------------------------------------------------------------`))
     } catch (err) {
         console.log(chalk.redBright(err.message));
     }
